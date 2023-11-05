@@ -23,8 +23,8 @@ const Publication = ({ title }) => {
           src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=60&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fHww"
           alt=""
         />
-        <p>Mykhailo Hulak</p>
-        <a href="">@midjiro</a>
+        <p>John Doe</p>
+        <a href="">@johndoe3006</a>
       </PublicationAuthor>
       <h3>
         <a>{title}</a>

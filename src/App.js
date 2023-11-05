@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Container from "./components/styled/Container.styled";
 import { db } from "./config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import Message from "./components/Message";
 
 function App() {
@@ -11,32 +11,37 @@ function App() {
   const [error, setError] = useState(null);
   const [isPending, setIsPending] = useState(false);
 
+  const updatePublications = (query) => {
+    if (query.empty) return;
+
+    const newPublications = query.docs.map((doc) => doc.data());
+    setPublications(newPublications);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
+    try {
       setIsPending(true);
 
-      const table = collection(db, "publications");
-
-      try {
-        const querySnapshot = await getDocs(table);
-
-        if (querySnapshot.empty) return;
-
-        const newPublications = querySnapshot.docs.map((doc) => doc.data());
-        setPublications(newPublications);
-      } catch (e) {
-        setError({
-          iconClassList: "fa-solid fa-triangle-exclamation",
-          title: "Ooops! Something went wrong.",
-          description:
-            "We are unable to load publications. Try to check your connection and refresh the page.",
-        });
-      }
+      const query = collection(db, "publications");
+      // ? Handle data changes and re-render corresponding component automatically
+      const unsubscribe = onSnapshot(query, (snapshot) => {
+        updatePublications(snapshot);
+      });
 
       setIsPending(false);
-    };
 
-    fetchData();
+      // ? Cleanup: unsubscribe from handling data changes
+      return () => {
+        unsubscribe();
+      };
+    } catch (e) {
+      setError({
+        iconClassList: "fa-solid fa-triangle-exclamation",
+        title: "Ooops! Something went wrong.",
+        description:
+          "We are unable to load publications. Try to check your connection and refresh the page.",
+      });
+    }
   }, []);
 
   if (isPending)
