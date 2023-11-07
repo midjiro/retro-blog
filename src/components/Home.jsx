@@ -18,28 +18,30 @@ const Home = ({ publications }) => {
     setSearchResults(newSearchResults);
   };
 
-  if (publications === null || publications.length === 0)
-    return (
-      <main>
+  return (
+    <main>
+      {!publications && (
         <Message
           iconClassList={"fa-solid fa-ranking-star"}
           title={"Become first who published an article!"}
           description={"Go to the “write” page and publish something awfull."}
         />
-      </main>
-    );
-
-  return (
-    <main>
-      <SearchForm publications={publications} handleSearch={handleSearch} />
-      <section>
-        <h2 className="sr-only">
-          {searchResults === null ? "All publications:" : "Results found:"}
-        </h2>
-        <PublicationList
-          publications={searchResults === null ? publications : searchResults}
-        />
-      </section>
+      )}
+      {publications && (
+        <>
+          <SearchForm publications={publications} handleSearch={handleSearch} />
+          <section>
+            <h2 className="sr-only">
+              {searchResults === null ? "All publications:" : "Results found:"}
+            </h2>
+            <PublicationList
+              publications={
+                searchResults === null ? publications : searchResults
+              }
+            />
+          </section>
+        </>
+      )}
     </main>
   );
 };

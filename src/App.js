@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Container from "./components/styled/Container.styled";
 import { db } from "./config";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import Message from "./components/Message";
 
 function App() {
@@ -22,13 +22,15 @@ function App() {
     try {
       setIsPending(true);
 
+      // ? Check internet connection before fetching data
+      if (!navigator.onLine) throw Error("No internet connection.");
+
       const query = collection(db, "publications");
       // ? Handle data changes and re-render corresponding component automatically
       const unsubscribe = onSnapshot(query, (snapshot) => {
         updatePublications(snapshot);
+        setIsPending(false);
       });
-
-      setIsPending(false);
 
       // ? Cleanup: unsubscribe from handling data changes
       return () => {
@@ -44,38 +46,26 @@ function App() {
     }
   }, []);
 
-  if (isPending)
-    return (
-      <>
-        <Header />
-        <Container>
+  return (
+    <>
+      <Header />
+      <Container>
+        {isPending && !error && (
           <Message
             iconClassList={"fa-solid fa-spinner fa-spin"}
             title={"We are loading publications.."}
             description={"Dear Reader be patient, it may take a while"}
           />
-        </Container>
-      </>
-    );
-  else if (error)
-    return (
-      <>
-        <Header />
-        <Container>
+        )}
+        {error && (
           <Message
             iconClassList={"fa-solid fa-triangle-exclamation"}
             {...error}
             danger={true}
           />
-        </Container>
-      </>
-    );
+        )}
 
-  return (
-    <>
-      <Header />
-      <Container>
-        <Home publications={publications} />
+        {!isPending && !error && <Home publications={publications} />}
       </Container>
     </>
   );
