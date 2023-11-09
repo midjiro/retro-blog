@@ -1,6 +1,6 @@
 import StyledMessage from "./styled/StyledMessage.styled";
 
-const Message = ({ iconClassList, title, description, danger }) => {
+const Message = ({ iconClassList, title, description, danger, children }) => {
   return (
     <StyledMessage danger={danger}>
       <i className={`fa-2x ${iconClassList}`}></i>

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import PublicationList from "./PublicationList";
-import SearchForm from "./SearchForm";
-import Message from "./Message";
+import PublicationList from "../components/PublicationList";
+import SearchForm from "../components/SearchForm";
+import Message from "../components/Message";
+import useFetch from "../hooks/useFetch";
 
-const Home = ({ publications }) => {
+const Home = () => {
+  const { error, isPending, data: publications } = useFetch("publications");
   const [searchResults, setSearchResults] = useState(null);
 
   const handleSearch = (e, publications) => {
@@ -20,14 +22,15 @@ const Home = ({ publications }) => {
 
   return (
     <main>
-      {!publications && (
+      {isPending && (
         <Message
-          iconClassList={"fa-solid fa-ranking-star"}
-          title={"Become first who published an article!"}
-          description={"Go to the “write” page and publish something awfull."}
+          iconClassList={"fa-solid fa-spinner fa-spin"}
+          title={"We are loading publications..."}
+          description={"Dear Reader, be patient: it may take a while"}
         />
       )}
-      {publications && (
+      {!isPending && error && <Message {...error} />}
+      {publications && !error && (
         <>
           <SearchForm publications={publications} handleSearch={handleSearch} />
           <section>

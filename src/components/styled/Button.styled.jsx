@@ -6,6 +6,7 @@ const Button = styled.button`
   border: 2px solid var(--black-100);
   box-shadow: 4px 4px rgba(0, 0, 0, 0.65);
   transition: box-shadow 250ms;
+  cursor: pointer;
 
   &:hover,
   &:focus {
@@ -13,4 +14,12 @@ const Button = styled.button`
   }
 `;
 
-export default Button;
+const ButtonDanger = styled(Button)`
+  background: var(--red-100);
+`;
+
+const ButtonSuccess = styled(Button)`
+  background: var(--green-100);
+`;
+
+export { Button, ButtonSuccess, ButtonDanger };

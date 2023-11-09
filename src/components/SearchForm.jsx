@@ -1,4 +1,4 @@
-import Button from "./styled/Button.styled";
+import { Button } from "./styled/Button.styled";
 import Input from "./styled/Input.styled";
 import StyledSearchForm from "./styled/StyledSearchForm";
 

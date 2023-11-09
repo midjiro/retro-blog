@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NavigationMenu from "./styled/NavigationMenu.styled";
 import StyledHeader from "./styled/StyledHeader.styled";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,10 +21,10 @@ const Header = () => {
         <i className="fa-xl fa-solid fa-bars"></i>
       </button>
       <NavigationMenu aria-expanded={isExpanded}>
-        <a href="">Home</a>
-        <a href="">Write</a>
-        <a href="">Contact Us</a>
-        <a href="">Sign In</a>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/write">Write</NavLink>
+        <NavLink to="/contact">Contact Us</NavLink>
+        <NavLink to="/sign-in">Sign In</NavLink>
       </NavigationMenu>
     </StyledHeader>
   );

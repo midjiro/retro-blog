@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import Avatar from "./styled/Avatar.styled";
 import PublicationAuthor from "./styled/PublicationAuthor.styled";
 import StyledPublication from "./styled/StyledPublication.styled";
+import { Link } from "react-router-dom";
 
-const Publication = ({ title }) => {
+const Publication = ({ title, id }) => {
   const [background, setBackground] = useState(null);
 
   const pickRandomBackground = () => {
@@ -27,7 +28,7 @@ const Publication = ({ title }) => {
         <a href="">@johndoe3006</a>
       </PublicationAuthor>
       <h3>
-        <a>{title}</a>
+        <Link to={`publications/${id}`}>{title}</Link>
       </h3>
     </StyledPublication>
   );

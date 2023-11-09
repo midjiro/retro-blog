@@ -12,9 +12,13 @@ const StyledPublication = styled.article`
     box-shadow: none;
   }
 
-  > h3 {
+  h3 {
     margin-block-end: 0;
     cursor: pointer;
+
+    a {
+      color: inherit;
+    }
   }
 `;
 
