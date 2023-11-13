@@ -12,13 +12,10 @@ import Cover from "../components/styled/Cover.styled";
 import StyledPublicationDetails from "../components/styled/StyledPublicationDetails.styled";
 import ButtonGroup from "../components/styled/ButtonGroup.styled";
 import useFetch from "../hooks/useFetch";
-import { getDownloadURL, ref } from "firebase/storage";
-import { useRef } from "react";
 
 const PublicationDetails = () => {
   const { id } = useParams();
   const { error, isPending, data } = useFetch("publications", id);
-  const coverRef = useRef();
 
   const handleLike = async () => {
     const docRef = doc(db, "publications", id);
@@ -43,7 +40,7 @@ const PublicationDetails = () => {
       {!isPending && error && <Message {...error} />}
       {data && !error && (
         <>
-          <Cover src={data.cover} alt="" ref={coverRef} />
+          <Cover src={data.cover} alt="" />
           <h2>{data.title}</h2>
           <p>{data.description}</p>
           <h2>Written By</h2>
