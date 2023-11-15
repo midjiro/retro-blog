@@ -1,47 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PublicationList from "../components/PublicationList";
 import SearchForm from "../components/SearchForm";
 import Message from "../components/Message";
-import useFetch from "../hooks/useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { selectPublications } from "../store/publicationsReducer";
+import { createSelector } from "reselect";
+import { fetchPublicationList } from "../services/publicationList";
 
 const Home = () => {
-  const { error, isPending, data: publications } = useFetch("publications");
-  const [searchResults, setSearchResults] = useState(null);
+  const [titleToSearch, setTitleToSearch] = useState();
+  const [error, publications] = useSelector(
+    createSelector(selectPublications, ([error, publications]) => {
+      if (!titleToSearch) return [error, publications];
+      const filteredPublications = publications.filter((pub) =>
+        pub.title.toLowerCase().includes(titleToSearch)
+      );
 
-  const handleSearch = (e, publications) => {
+      return [error, filteredPublications];
+    })
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const cleanup = dispatch(fetchPublicationList());
+    if (cleanup) return cleanup;
+  }, []);
+
+  const handleSearch = (e) => {
     e.preventDefault();
-    const titleToSearch = new FormData(e.target).get("title");
-    const newSearchResults = publications.filter(({ title }) =>
-      title.toLowerCase().includes(titleToSearch.toLowerCase())
-    );
-
-    if (newSearchResults.length === 0) setSearchResults(null);
-
-    setSearchResults(newSearchResults);
+    const searchFormData = new FormData(e.target);
+    const titleToSearch = searchFormData.get("title").toLowerCase();
+    setTitleToSearch(titleToSearch);
   };
 
   return (
     <main>
-      {isPending && (
+      {publications === null && !error && (
         <Message
           iconClassList={"fa-solid fa-spinner fa-spin"}
           title={"We are loading publications..."}
           description={"Dear Reader, be patient: it may take a while"}
         />
       )}
-      {!isPending && error && <Message {...error} />}
-      {publications && !error && (
+      {error && <Message {...error} />}
+      {publications?.length > 0 && !error && (
         <>
           <SearchForm publications={publications} handleSearch={handleSearch} />
           <section>
-            <h2 className="sr-only">
-              {searchResults === null ? "All publications:" : "Results found:"}
-            </h2>
-            <PublicationList
-              publications={
-                searchResults === null ? publications : searchResults
-              }
-            />
+            <h2 className="sr-only">Publications:</h2>
+            <PublicationList publications={publications} />
           </section>
         </>
       )}

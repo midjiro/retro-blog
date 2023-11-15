@@ -1,5 +1,4 @@
-import { redirect, useParams } from "react-router-dom";
-import { deleteDoc, updateDoc, doc } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 import PublicationAuthor from "../components/styled/PublicationAuthor.styled";
 import Avatar from "../components/styled/Avatar.styled";
 import {
@@ -7,37 +6,47 @@ import {
   ButtonDanger,
 } from "../components/styled/Button.styled";
 import Message from "../components/Message";
-import { db } from "../config";
 import Cover from "../components/styled/Cover.styled";
 import StyledPublicationDetails from "../components/styled/StyledPublicationDetails.styled";
 import ButtonGroup from "../components/styled/ButtonGroup.styled";
-import useFetch from "../hooks/useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { selectPublication } from "../store/publicationReducer";
+import {
+  deletePublication,
+  fetchPublication,
+  likePublication,
+} from "../services/publication";
 
 const PublicationDetails = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
-  const { error, isPending, data } = useFetch("publications", id);
+  const dispatch = useDispatch();
+  const [error, data] = useSelector(selectPublication);
+
+  useEffect(() => {
+    dispatch(fetchPublication(id));
+  }, []);
 
   const handleLike = async () => {
-    const docRef = doc(db, "publications", id);
-    await updateDoc(docRef, { likes: data.likes + 1 });
+    dispatch(likePublication());
   };
 
   const handleDelete = async () => {
-    const docRef = doc(db, "publications", id);
-    await deleteDoc(docRef);
-    return redirect("/");
+    dispatch(deletePublication());
+    navigate("/", { replace: true });
   };
 
   return (
     <StyledPublicationDetails>
-      {isPending && (
+      {!data && !error && (
         <Message
           iconClassList={"fa-solid fa-spinner fa-spin"}
           title={"We are loading publication..."}
           description={"Dear Reader, be patient: it may take a while"}
         />
       )}
-      {!isPending && error && <Message {...error} />}
+      {error && <Message {...error} />}
       {data && !error && (
         <>
           <Cover src={data.cover} alt="" />
