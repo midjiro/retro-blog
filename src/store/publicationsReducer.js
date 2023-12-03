@@ -18,6 +18,20 @@ export function publicationsReducer(state = initialState, action) {
         error: payload.error,
         publications: payload.publications,
       };
+
+    case ACTIONS.ADD_PUBLICATION:
+      return {
+        ...state,
+        publications: [...state.publications, payload.publication],
+      };
+    case ACTIONS.DELETE_PUBLICATION:
+      return {
+        ...state,
+        error: payload.error,
+        publications: state.publications.filter(
+          (publication) => publication.id !== payload.id
+        ),
+      };
   }
 }
 

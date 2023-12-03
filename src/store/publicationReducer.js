@@ -1,24 +1,23 @@
 import ACTIONS from "../actions";
 
-const initialState = { error: null, data: null };
+const INITIAL_STATE = {
+  error: null,
+  data: {
+    title: "",
+    description: "",
+    cover: "",
+    likes: 0,
+  },
+};
 
-export function publicationReducer(state = initialState, action) {
+export function publicationReducer(state = INITIAL_STATE, action) {
   const { type, payload } = action;
 
   switch (type) {
-    default:
-      return state;
-
     case ACTIONS.FETCH_PUBLICATION:
       return { ...state, error: payload.error, data: payload.data };
-    case ACTIONS.LIKE_PUBLICATION:
-      return {
-        ...state,
-        error: payload.error,
-        data: { ...state.data, likes: state.data.likes + 1 },
-      };
-    case ACTIONS.DELETE_PUBLICATION:
-      return { ...state, error: payload.error };
+    default:
+      return state;
   }
 }
 

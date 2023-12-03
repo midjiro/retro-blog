@@ -6,12 +6,14 @@ import {
 import Home from "./pages/Home";
 import PublicationDetails from "./pages/PublicationsDetails";
 import App from "./App";
+import Write from "./pages/Write";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
       <Route index element={<Home />} />
       <Route path="/publications/:id" element={<PublicationDetails />} />
+      <Route path="/write" element={<Write />} />
     </Route>
   )
 );

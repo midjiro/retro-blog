@@ -35,7 +35,7 @@ const Home = () => {
   };
 
   return (
-    <main>
+    <>
       {publications === null && !error && (
         <Message
           iconClassList={"fa-solid fa-spinner fa-spin"}
@@ -53,7 +53,7 @@ const Home = () => {
           </section>
         </>
       )}
-    </main>
+    </>
   );
 };
 

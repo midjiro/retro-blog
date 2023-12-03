@@ -1,5 +1,5 @@
 import { Button } from "./styled/Button.styled";
-import Input from "./styled/Input.styled";
+import { Input } from "./styled/Input.styled";
 import StyledSearchForm from "./styled/StyledSearchForm";
 
 const SearchForm = ({ publications, handleSearch }) => {

@@ -1,67 +1,97 @@
-import ACTIONS from "../actions";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  addDoc,
+  updateDoc,
+  increment,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 import { db, storage } from "../config";
-import { deleteObject, getDownloadURL, ref } from "firebase/storage";
-import { selectPublication } from "../store/publicationReducer";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import ACTIONS from "../actions";
 
 export function fetchPublication(id) {
-  return async (dispatch) => {
+  return (dispatch) => {
     const docRef = doc(db, "publications", id);
-    try {
-      const snapshot = await getDoc(docRef);
+    const unsubscribe = onSnapshot(docRef, (snapshot) => {
+      try {
+        if (snapshot.empty)
+          throw new Error({
+            title: "Ooops! We are unable to find this blog.",
+            description:
+              "It looks like given blog is moved or deleted. Contact us in case you have a questions.",
+            danger: true,
+          });
 
-      if (snapshot.empty)
-        throw new Error({
-          title: "Unable to find the publication you are looking for.",
-          description: "It has probably moved or deleted.",
-          danger: true,
+        dispatch({
+          type: ACTIONS.FETCH_PUBLICATION,
+          payload: {
+            error: null,
+            data: { ...snapshot.data(), id },
+          },
         });
+      } catch (e) {
+        dispatch({
+          type: ACTIONS.FETCH_PUBLICATION,
+          payload: {
+            error: e,
+            data: null,
+          },
+        });
+      }
+    });
 
-      const data = { ...snapshot.data(), id };
-      const coverRef = ref(storage, data.cover);
-      data.cover = await getDownloadURL(coverRef);
-      dispatch({
-        type: ACTIONS.FETCH_PUBLICATION,
-        payload: { error: null, data },
-      });
-    } catch (e) {
-      dispatch({
-        type: ACTIONS.FETCH_PUBLICATION,
-        payload: { error: e, data: null },
-      });
-    }
+    return unsubscribe;
   };
 }
 
-export function likePublication() {
-  return async (dispatch, getState) => {
-    const currentState = getState();
-    const [_, publication] = selectPublication(currentState);
-
-    const docRef = doc(db, "publications", publication.id);
-    try {
-      await updateDoc(docRef, { likes: publication.likes + 1 });
-      dispatch({ type: ACTIONS.LIKE_PUBLICATION, payload: { error: null } });
-    } catch (e) {
-      dispatch({ type: ACTIONS.LIKE_PUBLICATION, payload: { error: e } });
-    }
-  };
+export async function likePublication(id) {
+  try {
+    const docRef = doc(db, "publications", id);
+    await updateDoc(docRef, {
+      likes: increment(1),
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
-export function deletePublication() {
-  return async (dispatch, getState) => {
-    const currentState = getState();
-    const [_, publication] = selectPublication(currentState);
+export async function deletePublication(id, cover) {
+  const docRef = doc(db, "publications", id);
+  try {
+    const coverRef = ref(storage, cover);
+    await deleteObject(coverRef);
+    await deleteDoc(docRef);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
-    const docRef = doc(db, "publications", publication.id);
+export async function addPublication(publication) {
+  try {
+    const coverRef = ref(storage, publication.cover.name);
+    const coverUploadingResult = uploadBytesResumable(
+      coverRef,
+      publication.cover,
+      {
+        contentType: publication.cover.type,
+      }
+    );
 
-    try {
-      const coverRef = ref(storage, publication.cover);
-      await deleteObject(coverRef);
-      await deleteDoc(docRef);
-      dispatch({ type: ACTIONS.DELETE_PUBLICATION, payload: { error: null } });
-    } catch (e) {
-      dispatch({ type: ACTIONS.DELETE_PUBLICATION, payload: { error: e } });
-    }
-  };
+    coverUploadingResult
+      .then((snapshot) => getDownloadURL(snapshot.ref))
+      .then((coverURL) => {
+        const collectionRef = collection(db, "publications");
+        addDoc(collectionRef, { ...publication, cover: coverURL, likes: 0 });
+      });
+  } catch (e) {
+    console.error(e);
+  }
 }

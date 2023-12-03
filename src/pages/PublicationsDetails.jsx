@@ -9,14 +9,15 @@ import Message from "../components/Message";
 import Cover from "../components/styled/Cover.styled";
 import StyledPublicationDetails from "../components/styled/StyledPublicationDetails.styled";
 import ButtonGroup from "../components/styled/ButtonGroup.styled";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { selectPublication } from "../store/publicationReducer";
+
 import {
   deletePublication,
   fetchPublication,
   likePublication,
 } from "../services/publication";
+import { useDispatch, useSelector } from "react-redux";
+import { selectPublication } from "../store/publicationReducer";
 
 const PublicationDetails = () => {
   const navigate = useNavigate();
@@ -25,17 +26,9 @@ const PublicationDetails = () => {
   const [error, data] = useSelector(selectPublication);
 
   useEffect(() => {
-    dispatch(fetchPublication(id));
-  }, []);
-
-  const handleLike = async () => {
-    dispatch(likePublication());
-  };
-
-  const handleDelete = async () => {
-    dispatch(deletePublication());
-    navigate("/", { replace: true });
-  };
+    const unsubscribe = dispatch(fetchPublication(id));
+    return unsubscribe;
+  }, [id]);
 
   return (
     <StyledPublicationDetails>
@@ -59,10 +52,18 @@ const PublicationDetails = () => {
             <a href="">@midjiro</a>
           </PublicationAuthor>
           <ButtonGroup>
-            <ButtonSuccess onClick={handleLike}>
+            <ButtonSuccess onClick={() => likePublication(id)}>
               {data.likes === 0 ? "Like" : `Like - ${data.likes}`}
             </ButtonSuccess>
-            <ButtonDanger onClick={handleDelete}>Remove</ButtonDanger>
+            <ButtonDanger
+              onClick={() =>
+                deletePublication(id, data.cover).then(() =>
+                  navigate("/", { replace: true })
+                )
+              }
+            >
+              Remove
+            </ButtonDanger>
           </ButtonGroup>
         </>
       )}
