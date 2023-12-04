@@ -10,7 +10,9 @@ const Write = () => {
       ...data,
       cover: data.cover.item(0),
       likes: 0,
-    }).then(() => navigate("/", { replace: true }));
+    })
+      .then(() => navigate("/", { replace: true }))
+      .catch((e) => console.error(e));
   };
 
   return (

@@ -6,7 +6,6 @@ import {
   updateDoc,
   increment,
   onSnapshot,
-  query,
 } from "firebase/firestore";
 import { db, storage } from "../config";
 import {
@@ -75,23 +74,19 @@ export async function deletePublication(id, cover) {
 }
 
 export async function addPublication(publication) {
-  try {
-    const coverRef = ref(storage, publication.cover.name);
-    const coverUploadingResult = uploadBytesResumable(
-      coverRef,
-      publication.cover,
-      {
-        contentType: publication.cover.type,
-      }
-    );
+  const coverRef = ref(storage, publication.cover.name);
+  const coverUploadingResult = uploadBytesResumable(
+    coverRef,
+    publication.cover,
+    {
+      contentType: publication.cover.type,
+    }
+  );
 
-    coverUploadingResult
-      .then((snapshot) => getDownloadURL(snapshot.ref))
-      .then((coverURL) => {
-        const collectionRef = collection(db, "publications");
-        addDoc(collectionRef, { ...publication, cover: coverURL, likes: 0 });
-      });
-  } catch (e) {
-    console.error(e);
-  }
+  coverUploadingResult
+    .then((snapshot) => getDownloadURL(snapshot.ref))
+    .then((coverURL) => {
+      const collectionRef = collection(db, "publications");
+      addDoc(collectionRef, { ...publication, cover: coverURL, likes: 0 });
+    });
 }

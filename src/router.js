@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import PublicationDetails from "./pages/PublicationsDetails";
 import App from "./App";
 import Write from "./pages/Write";
+import Contact from "./pages/Contact";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -14,6 +15,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/publications/:id" element={<PublicationDetails />} />
       <Route path="/write" element={<Write />} />
+      <Route path="/contact" element={<Contact />} />
     </Route>
   )
 );
