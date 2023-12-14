@@ -5,6 +5,7 @@ const GlobalStyles = createGlobalStyle`
 
     :root{
         --black-100: #161616;
+        --gray-100: #ccc;
         --yellow-100: #FFD166;
         --yellow-200: #FDE1A0;
         --red-100: #EF476F;
@@ -54,7 +55,9 @@ const GlobalStyles = createGlobalStyle`
     }
 
     a{
+        display: block;
         text-decoration: none;
+        color: var(--black-100);
     }
 
     button{
