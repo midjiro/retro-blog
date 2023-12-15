@@ -18,7 +18,7 @@ const SignIn = ({ onSubmit }) => {
   } = useForm();
 
   const navigate = useNavigate();
-  const currentUser = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <StyledAuth>
@@ -66,11 +66,11 @@ const SignIn = ({ onSubmit }) => {
         </FormControl>
         <Link to="/sign-up">Have no account? Create One</Link>
         <Link to="/recovery">Forgot password?</Link>
-        <ButtonSuccess type="submit" disabled={currentUser ? true : false}>
-          {currentUser ? "You already logged in" : "Log in"}
+        <ButtonSuccess type="submit" disabled={isAuthenticated ? true : false}>
+          {isAuthenticated ? "You already logged in" : "Log in"}
         </ButtonSuccess>
       </form>
-      {!currentUser && (
+      {!isAuthenticated && (
         <Button onClick={signInWithGoogle}>Log in with google</Button>
       )}
     </StyledAuth>

@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 const Header = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
-  const user = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   window.addEventListener("resize", () =>
     window.innerWidth >= 720 ? setIsExpanded(true) : setIsExpanded(false)
@@ -31,7 +31,7 @@ const Header = () => {
         <NavLink to="/">Home</NavLink>
         <NavLink to="/write">Write</NavLink>
         <NavLink to="/contact">Contact Us</NavLink>
-        {user ? (
+        {isAuthenticated ? (
           <ButtonDanger
             onClick={() =>
               signOut(auth)

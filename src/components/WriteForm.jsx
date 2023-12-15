@@ -18,7 +18,7 @@ const WriteForm = ({ onSubmit }) => {
     watch,
   } = useForm();
   const coverImageRef = useRef();
-  const coverFieldValue = watch("cover")?.item(0);
+  const coverFieldValue = watch("cover");
 
   const loadCoverImage = (coverFieldValue, coverImageRef) => {
     if (!coverFieldValue) return;
@@ -40,7 +40,7 @@ const WriteForm = ({ onSubmit }) => {
             alt=""
             src={
               coverFieldValue
-                ? loadCoverImage(coverFieldValue, coverImageRef.current)
+                ? loadCoverImage(coverFieldValue.item(0), coverImageRef.current)
                 : ""
             }
             ref={coverImageRef}

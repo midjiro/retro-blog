@@ -12,13 +12,16 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { recoverPassword, signIn, signUp } from "./services/user";
 import PasswordRecovery from "./pages/PasswordRecovery";
+import ProtectedRoute from "./components/hoc/ProtectedRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
       <Route index element={<Home />} />
       <Route path="/publications/:id" element={<PublicationDetails />} />
-      <Route path="/write" element={<Write />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/write" element={<Write />} />
+      </Route>
       <Route path="/contact" element={<Contact />} />
       <Route path="/sign-in" element={<SignIn onSubmit={signIn} />} />
       <Route path="/sign-up" element={<SignUp onSubmit={signUp} />} />

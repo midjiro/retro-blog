@@ -16,7 +16,7 @@ const SignUp = ({ onSubmit }) => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const currentUser = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <StyledAuth>
@@ -71,8 +71,8 @@ const SignUp = ({ onSubmit }) => {
           <FormError>{errors.password?.message}</FormError>
         </FormControl>
         <Link to="/sign-in">Already have an account? sign in</Link>
-        <ButtonSuccess type="submit" disabled={currentUser ? true : false}>
-          {currentUser ? "You already logged in" : "Create an account"}
+        <ButtonSuccess type="submit" disabled={isAuthenticated ? true : false}>
+          {isAuthenticated ? "You already logged in" : "Create an account"}
         </ButtonSuccess>
       </form>
     </StyledAuth>

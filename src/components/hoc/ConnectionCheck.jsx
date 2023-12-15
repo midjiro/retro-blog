@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Message from "./Message";
+import Message from "../Message";
 
 const ConnectionCheck = ({ children }) => {
   const [isConnected, setIsConnected] = useState(navigator.onLine);
