@@ -7,6 +7,8 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../config";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../config";
 
 function provideErrorMessage(e) {
   switch (e.code) {
@@ -22,15 +24,18 @@ function provideErrorMessage(e) {
   }
 }
 
-export async function signUp({ email, password }) {
+export async function signUp({ username, email, password }) {
   try {
-    const credential = await createUserWithEmailAndPassword(
+    const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
 
-    return credential.user;
+    const authorDoc = doc(db, "users", user.uid);
+    await setDoc(authorDoc, { username, email });
+
+    return user;
   } catch (e) {
     throw new Error(provideErrorMessage(e));
   }
@@ -38,8 +43,8 @@ export async function signUp({ email, password }) {
 
 export async function signIn({ email, password }) {
   try {
-    const credential = await signInWithEmailAndPassword(auth, email, password);
-    return credential.user;
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    return user;
   } catch (e) {
     throw new Error(provideErrorMessage(e));
   }
@@ -51,8 +56,8 @@ export async function signInWithGoogle() {
     await signInWithRedirect(auth, provider);
 
     const result = await getRedirectResult(auth);
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    return credential.user;
+    const { user } = GoogleAuthProvider.credentialFromResult(result);
+    return user;
   } catch (e) {
     throw new Error(provideErrorMessage(e));
   }

@@ -4,7 +4,7 @@ import PublicationAuthor from "./styled/PublicationAuthor.styled";
 import StyledPublication from "./styled/StyledPublication.styled";
 import { Link } from "react-router-dom";
 
-const Publication = ({ title, id }) => {
+const Publication = ({ author, title, id }) => {
   const [background, setBackground] = useState(null);
 
   const pickRandomBackground = () => {
@@ -24,8 +24,8 @@ const Publication = ({ title, id }) => {
           src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=60&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fHww"
           alt=""
         />
-        <p>John Doe</p>
-        <a href="">@johndoe3006</a>
+        <p>{author.username}</p>
+        <a href={`mailto:${author.email}`}>{author.email}</a>
       </PublicationAuthor>
       <h3>
         <Link to={`publications/${id}`}>{title}</Link>

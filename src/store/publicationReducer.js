@@ -5,8 +5,13 @@ const INITIAL_STATE = {
   data: {
     title: "",
     description: "",
+    author: {
+      username: "",
+      email: "",
+      id: "",
+    },
     cover: "",
-    likes: 0,
+    likedBy: [],
   },
 };
 

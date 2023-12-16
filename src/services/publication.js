@@ -4,8 +4,8 @@ import {
   doc,
   addDoc,
   updateDoc,
-  increment,
   onSnapshot,
+  getDoc,
 } from "firebase/firestore";
 import { db, storage } from "../config";
 import {
@@ -51,12 +51,18 @@ export function fetchPublication(id) {
   };
 }
 
-export async function likePublication(id) {
+export async function likePublication(publication, userId) {
   try {
-    const docRef = doc(db, "publications", id);
-    await updateDoc(docRef, {
-      likes: increment(1),
-    });
+    const docRef = doc(db, "publications", publication.id);
+    if (publication.likedBy.includes(userId)) {
+      await updateDoc(docRef, {
+        likedBy: publication.likedBy.filter((uuid) => uuid !== userId),
+      });
+    } else {
+      await updateDoc(docRef, {
+        likedBy: [...publication.likedBy, userId],
+      });
+    }
   } catch (e) {
     console.error(e);
   }
@@ -89,4 +95,16 @@ export async function addPublication(publication) {
       const collectionRef = collection(db, "publications");
       addDoc(collectionRef, { ...publication, cover: coverURL, likes: 0 });
     });
+}
+
+export async function getAuthorData(authorID) {
+  try {
+    const authorRef = doc(db, "users", authorID);
+    let author = await getDoc(authorRef);
+    author = { ...author.data(), id: author.id };
+
+    return author;
+  } catch (e) {
+    console.error(e);
+  }
 }

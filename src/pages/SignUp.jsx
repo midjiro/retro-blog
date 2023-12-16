@@ -33,6 +33,22 @@ const SignUp = ({ onSubmit }) => {
         noValidate
       >
         <FormControl>
+          <label htmlFor="username">Username</label>
+          <Input
+            {...register("username", {
+              required: { value: true, message: "This is required field." },
+              maxLength: {
+                value: 16,
+                message: "Username must be at most 16 characters long.",
+              },
+            })}
+            type="text"
+            id="username"
+            className="form-control__input"
+          />
+          <FormError>{errors.email?.message}</FormError>
+        </FormControl>
+        <FormControl>
           <label htmlFor="email">Email Address</label>
           <Input
             {...register("email", {

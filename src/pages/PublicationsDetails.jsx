@@ -9,7 +9,7 @@ import Message from "../components/Message";
 import Cover from "../components/styled/Cover.styled";
 import StyledPublicationDetails from "../components/styled/StyledPublicationDetails.styled";
 import ButtonGroup from "../components/styled/ButtonGroup.styled";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import {
   deletePublication,
@@ -18,12 +18,14 @@ import {
 } from "../services/publication";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPublication } from "../store/publicationReducer";
+import { AuthContext } from "../components/AuthContext";
 
 const PublicationDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
   const [error, data] = useSelector(selectPublication);
+  const { isAuthenticated, user } = useContext(AuthContext);
 
   useEffect(() => {
     const unsubscribe = dispatch(fetchPublication(id));
@@ -48,23 +50,31 @@ const PublicationDetails = () => {
           <h2>Written By</h2>
           <PublicationAuthor className="author-info">
             <Avatar />
-            <p>John Doe</p>
-            <a href="">@midjiro</a>
+            <p>{data.author?.username}</p>
+            <a href={`mailto:${data.author?.email}`}>{data.author?.email}</a>
           </PublicationAuthor>
-          <ButtonGroup>
-            <ButtonSuccess onClick={() => likePublication(id)}>
-              {data.likes === 0 ? "Like" : `Like - ${data.likes}`}
-            </ButtonSuccess>
-            <ButtonDanger
-              onClick={() =>
-                deletePublication(id, data.cover).then(() =>
-                  navigate("/", { replace: true })
-                )
-              }
-            >
-              Remove
-            </ButtonDanger>
-          </ButtonGroup>
+          {isAuthenticated && (
+            <ButtonGroup>
+              <ButtonSuccess onClick={() => likePublication(data, user.uid)}>
+                {data.likedBy?.includes(user.uid)
+                  ? "Liked"
+                  : data.likedBy?.length >= 1
+                  ? `${data.likedBy?.length} Like`
+                  : "Like"}
+              </ButtonSuccess>
+              {data.author?.id === user.uid && (
+                <ButtonDanger
+                  onClick={() =>
+                    deletePublication(id, data.cover).then(() =>
+                      navigate("/", { replace: true })
+                    )
+                  }
+                >
+                  Remove
+                </ButtonDanger>
+              )}
+            </ButtonGroup>
+          )}
         </>
       )}
     </StyledPublicationDetails>
