@@ -1,0 +1,20 @@
+@use "../vars";
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-card__username {
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: vars.$fs-100;
+  font-weight: 700;
+  margin-block: 0.25rem;
+}
+
+.profile-card__email {
+  font-size: vars.$fs-100;
+  color: vars.$black-100;
+  margin: 0;
+}

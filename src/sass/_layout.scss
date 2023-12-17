@@ -17,8 +17,11 @@
 .navbar__menu {
   position: absolute;
   inset: 100% 0 auto 0;
-  background: vars.$yellow-100;
   padding: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: vars.$yellow-100;
   transform-origin: top left;
   transition: scale 250ms;
   border: inherit;
@@ -31,12 +34,7 @@
 
 .navbar__link {
   font-family: "Roboto", "Arial", sans-serif;
-  display: block;
   color: vars.$black-100;
-
-  &:not(:last-child) {
-    margin-block-end: 1rem;
-  }
 
   &--active,
   &:hover,
@@ -54,17 +52,10 @@
 @media screen and (width >= 720px) {
   .navbar__menu {
     position: static;
+    flex-direction: row;
+    align-items: center;
     padding: 0;
     border: none;
-  }
-
-  .navbar__link {
-    display: inline-block;
-
-    &:not(:last-child) {
-      margin-inline-end: 1rem;
-      margin-block-end: 0;
-    }
   }
 }
 
