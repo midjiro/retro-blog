@@ -27,5 +27,5 @@ REACT_APP_EMAIL = "admin email"```
 ````
 
 8. Replace "..." with apiKey, appId and messagingSenderId copied from Project Settings.
-
-9. Execute `npm start`.
+9. Execute `npm install`.
+10. Execute `npm start`.
