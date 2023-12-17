@@ -5,10 +5,10 @@ import {
   signInWithRedirect,
   getRedirectResult,
   sendPasswordResetEmail,
+  updateProfile,
 } from "firebase/auth";
-import { auth } from "../config";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../config";
+import { auth, storage } from "../config";
+import { getDownloadURL, ref } from "firebase/storage";
 
 function provideErrorMessage(e) {
   switch (e.code) {
@@ -16,9 +16,10 @@ function provideErrorMessage(e) {
       return "Account with such email address already exists.";
     case "auth/invalid-credential":
       return "Invalid email or password.";
-    case "auth/invalid-login-credentials":
     case "auth/account-exists-with-different-credential":
       return "Account was registered with different provider. Try again in another way.";
+    case "auth/invalid-login-credentials":
+      return "Invalid email or password. Check them and try again.";
     default:
       return "Something went wrong. Contact us!";
   }
@@ -32,8 +33,16 @@ export async function signUp({ username, email, password }) {
       password
     );
 
-    const authorDoc = doc(db, "users", user.uid);
-    await setDoc(authorDoc, { username, email });
+    const defaultAvatarRef = ref(
+      storage,
+      "gs://retro-blog-3d46c.appspot.com/Default Avatar.png"
+    );
+    const defaultAvatarURL = await getDownloadURL(defaultAvatarRef);
+
+    await updateProfile(user, {
+      displayName: username,
+      photoURL: defaultAvatarURL,
+    });
 
     return user;
   } catch (e) {
@@ -57,6 +66,7 @@ export async function signInWithGoogle() {
 
     const result = await getRedirectResult(auth);
     const { user } = GoogleAuthProvider.credentialFromResult(result);
+    debugger;
     return user;
   } catch (e) {
     throw new Error(provideErrorMessage(e));

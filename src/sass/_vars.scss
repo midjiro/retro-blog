@@ -1,0 +1,15 @@
+$black-100: #161616;
+$gray-100: #ccc;
+$yellow-100: #ffd166;
+$yellow-200: #fde1a0;
+$red-100: #ef476f;
+$green-100: #06d6a0;
+
+/* 14.00px → 16.00px */
+$fs-100: clamp(0.875rem, 0.8315rem + 0.2174vw, 1rem);
+/* 16.00px → 18.00px */
+$fs-200: clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem);
+/* 18.00px → 24.00px */
+$fs-300: clamp(1.125rem, 0.9946rem + 0.6522vw, 1.5rem);
+/* 24.00px → 32.00px */
+$fs-400: clamp(1.5rem, 1.3261rem + 0.8696vw, 2rem);

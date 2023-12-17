@@ -1,10 +1,6 @@
-import { Button } from "./styled/Button.styled";
-import { Input } from "./styled/Input.styled";
-import StyledSearchForm from "./styled/StyledSearchForm";
-
 const SearchForm = ({ publications, handleSearch }) => {
   return (
-    <StyledSearchForm>
+    <section className="search">
       <h2>
         Unlock Valuable Insights: Find What You're Looking For in Our Blog{" "}
       </h2>
@@ -13,18 +9,29 @@ const SearchForm = ({ publications, handleSearch }) => {
         blog database.
       </p>
       <form
+        className="search__form"
         action=""
         onSubmit={(e) => {
           handleSearch(e, publications);
         }}
       >
-        <label htmlFor="">
-          <span className="sr-only">Search for a publication by its title</span>
-          <Input type="text" name="title" maxLength="120" />
-        </label>
-        <Button type="submit">Search</Button>
+        <div className="form-control">
+          <label htmlFor="search" className="sr-only">
+            Search for a publication by its title
+          </label>
+          <input
+            type="search"
+            name="title"
+            id="search"
+            className="form-control__input"
+            maxLength="120"
+          />
+        </div>
+        <button className="btn" type="submit">
+          Search
+        </button>
       </form>
-    </StyledSearchForm>
+    </section>
   );
 };
 

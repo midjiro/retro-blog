@@ -1,11 +1,6 @@
 import { useForm } from "react-hook-form";
-import { ButtonSuccess } from "../components/styled/Button.styled";
 import { toast } from "react-toastify";
-import FormControl from "../components/styled/FormControl.styled";
-import { Input } from "../components/styled/Input.styled";
-import FormError from "../components/styled/FormError.styled";
 import { useNavigate } from "react-router-dom";
-import StyledAuth from "../components/styled/StyledAuth.styled";
 
 const PasswordRecovery = ({ onSubmit }) => {
   const {
@@ -17,7 +12,7 @@ const PasswordRecovery = ({ onSubmit }) => {
   const navigate = useNavigate();
 
   return (
-    <StyledAuth>
+    <section className="form-container">
       <h2>Reclaim Your Access: Password Recovery</h2>
       <p>
         Reset your password effortlessly and regain control of your account.
@@ -34,10 +29,13 @@ const PasswordRecovery = ({ onSubmit }) => {
             .catch((e) => toast(e.message))
         )}
         noValidate
+        className="form"
       >
-        <FormControl>
-          <label htmlFor="email">Email Address</label>
-          <Input
+        <div className="form-control">
+          <label htmlFor="email" className="form-control__field">
+            Email Address
+          </label>
+          <input
             {...register("email", {
               required: { value: true, message: "This is required field." },
               pattern: {
@@ -47,12 +45,15 @@ const PasswordRecovery = ({ onSubmit }) => {
             })}
             type="email"
             id="email"
-          ></Input>
-          <FormError>{errors.email?.message}</FormError>
-        </FormControl>
-        <ButtonSuccess type="submit">Send recovery email</ButtonSuccess>
+            className="form-control__input"
+          />
+          <span className="form-control__error">{errors.email?.message}</span>
+        </div>
+        <button type="submit" className="btn form__btn btn--success">
+          Send recovery email
+        </button>
       </form>
-    </StyledAuth>
+    </section>
   );
 };
 

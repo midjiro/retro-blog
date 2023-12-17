@@ -19,7 +19,6 @@ const ConnectionCheck = ({ children }) => {
         description={
           "We are unable to load publication. Try to check your connection and refresh the page."
         }
-        danger={true}
       />
     );
 

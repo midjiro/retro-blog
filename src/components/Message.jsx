@@ -1,12 +1,10 @@
-import StyledMessage from "./styled/StyledMessage.styled";
-
-const Message = ({ iconClassList, title, description, danger, children }) => {
+const Message = ({ iconClassList, title, description }) => {
   return (
-    <StyledMessage danger={danger}>
-      <i className={`fa-2x ${iconClassList}`}></i>
-      <h3>{title}</h3>
-      <p>{description}</p>
-    </StyledMessage>
+    <article className="message">
+      <i className={`fa-2x ${iconClassList} message__icon`}></i>
+      <h3 className="message__title">{title}</h3>
+      <p className="message__description">{description}</p>
+    </article>
   );
 };
 

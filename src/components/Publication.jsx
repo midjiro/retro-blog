@@ -1,36 +1,19 @@
-import { useEffect, useState } from "react";
-import Avatar from "./styled/Avatar.styled";
-import PublicationAuthor from "./styled/PublicationAuthor.styled";
-import StyledPublication from "./styled/StyledPublication.styled";
 import { Link } from "react-router-dom";
 
 const Publication = ({ author, title, id }) => {
-  const [background, setBackground] = useState(null);
-
-  const pickRandomBackground = () => {
-    const backgroundList = ["yellow", "red", "green"];
-    const pickedBackground =
-      backgroundList[Math.floor(Math.random() * backgroundList.length)];
-
-    setBackground(pickedBackground);
-  };
-
-  useEffect(pickRandomBackground, []);
-
   return (
-    <StyledPublication background={background}>
-      <PublicationAuthor>
-        <Avatar
-          src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=60&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fHww"
-          alt=""
-        />
-        <p>{author.username}</p>
-        <a href={`mailto:${author.email}`}>{author.email}</a>
-      </PublicationAuthor>
+    <article className="publication">
+      <article className="profile">
+        <img src={author.avatar} alt="" className="avatar profile__avatar" />
+        <p className="profile__username">{author.username}</p>
+        <a href={`mailto:${author.email}`} className="profile__email">
+          {author.email}
+        </a>
+      </article>
       <h3>
         <Link to={`publications/${id}`}>{title}</Link>
       </h3>
-    </StyledPublication>
+    </article>
   );
 };
 

@@ -1,14 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Button, ButtonSuccess } from "../components/styled/Button.styled";
-import FormControl from "../components/styled/FormControl.styled";
-import { Input } from "../components/styled/Input.styled";
 import { Link, useNavigate } from "react-router-dom";
-import FormError from "../components/styled/FormError.styled";
 import { toast } from "react-toastify";
 import { signInWithGoogle } from "../services/user";
 import { AuthContext } from "../components/AuthContext";
 import { useContext } from "react";
-import StyledAuth from "../components/styled/StyledAuth.styled";
 
 const SignIn = ({ onSubmit }) => {
   const {
@@ -21,22 +16,25 @@ const SignIn = ({ onSubmit }) => {
   const { isAuthenticated } = useContext(AuthContext);
 
   return (
-    <StyledAuth>
+    <section className="form-container">
       <h2>Welcome Back! Log In to Your Account</h2>
       <p>Welcome back! Your next adventure awaits.</p>
       <form
         action=""
         onSubmit={handleSubmit((data) =>
           onSubmit(data)
-            .then((user) => toast(`Welcome back, ${user.email}!`))
+            .then((user) => toast(`Welcome back, ${user.displayName}!`))
             .then(() => navigate("/", { replace: true }))
             .catch((e) => toast(e.message))
         )}
         noValidate
+        className="form"
       >
-        <FormControl>
-          <label htmlFor="email">Email Address</label>
-          <Input
+        <div className="form-control">
+          <label htmlFor="email" className="form-control__field">
+            Email Address
+          </label>
+          <input
             {...register("email", {
               required: { value: true, message: "This is required field." },
               pattern: {
@@ -48,13 +46,13 @@ const SignIn = ({ onSubmit }) => {
             id="email"
             className="form-control__input"
           />
-          <FormError>{errors.email?.message}</FormError>
-        </FormControl>
-        <FormControl className="form-control">
+          <span className="form-control__error">{errors.email?.message}</span>
+        </div>
+        <div className="form-control">
           <label htmlFor="password" className="form-control__field">
             Password
           </label>
-          <Input
+          <input
             {...register("password", {
               required: { value: true, message: "This is required field." },
             })}
@@ -62,18 +60,28 @@ const SignIn = ({ onSubmit }) => {
             id="password"
             className="form-control__input"
           />
-          <FormError>{errors.password?.message}</FormError>
-        </FormControl>
-        <Link to="/sign-up">Have no account? Create One</Link>
-        <Link to="/recovery">Forgot password?</Link>
-        <ButtonSuccess type="submit" disabled={isAuthenticated ? true : false}>
+          <span className="form-control__error">
+            {errors.password?.message}
+          </span>
+        </div>
+        <div className="form__link-group">
+          <Link to="/sign-up">Have no account? Create One</Link>
+          <Link to="/recovery">Forgot password?</Link>
+        </div>
+        <button
+          type="submit"
+          className="btn form__btn btn--success"
+          disabled={isAuthenticated ? true : false}
+        >
           {isAuthenticated ? "You already logged in" : "Log in"}
-        </ButtonSuccess>
+        </button>
       </form>
       {!isAuthenticated && (
-        <Button onClick={signInWithGoogle}>Log in with google</Button>
+        <button className="btn" onClick={signInWithGoogle}>
+          Log in with google
+        </button>
       )}
-    </StyledAuth>
+    </section>
   );
 };
 

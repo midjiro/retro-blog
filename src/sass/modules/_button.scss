@@ -1,0 +1,39 @@
+@use "../vars";
+
+.btn {
+  padding: 0.5rem 1rem;
+  background-color: vars.$yellow-100;
+  border: 2px solid vars.$black-100;
+  box-shadow: 4px 4px rgba(0, 0, 0, 0.65);
+  text-transform: capitalize;
+  transition: box-shadow 250ms;
+  cursor: pointer;
+
+  &:hover,
+  &:focus,
+  &:disabled {
+    box-shadow: none;
+  }
+
+  &:disabled {
+    background-color: vars.$gray-100;
+    color: vars.$black-100;
+  }
+}
+
+.btn--danger {
+  background-color: vars.$red-100;
+}
+
+.btn--success {
+  background: vars.$green-100;
+}
+
+.btn-group {
+  display: flex;
+  gap: 1.5rem;
+
+  > * {
+    flex-grow: 1;
+  }
+}

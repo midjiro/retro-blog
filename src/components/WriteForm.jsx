@@ -1,12 +1,4 @@
 import { useForm } from "react-hook-form";
-import {
-  ButtonDanger,
-  ButtonSuccess,
-} from "../components/styled/Button.styled";
-import ButtonGroup from "../components/styled/ButtonGroup.styled";
-import { Input, FileInput, TextArea } from "../components/styled/Input.styled";
-import FormControl from "./styled/FormControl.styled";
-import FormError from "./styled/FormError.styled";
 import { useRef } from "react";
 
 const WriteForm = ({ onSubmit }) => {
@@ -33,9 +25,15 @@ const WriteForm = ({ onSubmit }) => {
 
   return (
     <form action="" onSubmit={handleSubmit(onSubmit)}>
-      <FormControl>
-        <label htmlFor="cover">Cover</label>
-        <FileInput id="cover" aria-invalid={errors.cover ? true : false}>
+      <div className="form-control">
+        <label htmlFor="cover" className="form-control__field">
+          Cover
+        </label>
+        <div
+          id="cover"
+          className="file-picker"
+          aria-invalid={errors.cover ? true : false}
+        >
           <img
             alt=""
             src={
@@ -43,6 +41,7 @@ const WriteForm = ({ onSubmit }) => {
                 ? loadCoverImage(coverFieldValue.item(0), coverImageRef.current)
                 : ""
             }
+            className="file-picker__image"
             ref={coverImageRef}
           />
           <input
@@ -57,13 +56,16 @@ const WriteForm = ({ onSubmit }) => {
                 );
               },
             })}
+            className="file-picker__input"
           />
-        </FileInput>
-        {<FormError>{errors.cover?.message}</FormError>}
-      </FormControl>
-      <FormControl>
-        <label htmlFor="title">Title</label>
-        <Input
+        </div>
+        <span className="form-control__error">{errors.cover?.message}</span>
+      </div>
+      <div className="form-control">
+        <label htmlFor="title" className="form-control__field">
+          Title
+        </label>
+        <input
           type="text"
           {...register("title", {
             required: { value: true, message: "Title is required" },
@@ -74,13 +76,16 @@ const WriteForm = ({ onSubmit }) => {
             },
           })}
           id="title"
+          className="form-control__input"
           aria-invalid={errors.title ? true : false}
         />
-        {<FormError>{errors.title?.message}</FormError>}
-      </FormControl>
-      <FormControl>
-        <label htmlFor="description">Description</label>
-        <TextArea
+        <span className="form-control__error">{errors.title?.message}</span>
+      </div>
+      <div className="form-control">
+        <label htmlFor="description" className="form-control__field">
+          Description
+        </label>
+        <textarea
           {...register("description", {
             required: { value: true, message: "Description is required" },
             maxLength: {
@@ -91,19 +96,25 @@ const WriteForm = ({ onSubmit }) => {
           })}
           cols="30"
           rows="5"
+          className="form-control__input"
           aria-invalid={errors.description ? true : false}
         />
-        {<FormError>{errors.description?.message}</FormError>}
-      </FormControl>
-      <ButtonGroup>
-        <ButtonSuccess type="submit">Publish</ButtonSuccess>
-        <ButtonDanger
+        <span className="form-control__error">
+          {errors.description?.message}
+        </span>
+      </div>
+      <div className="btn-group">
+        <button type="submit" className="btn btn--success">
+          Publish
+        </button>
+        <button
           type="reset"
+          className="btn btn--danger"
           onClick={() => reset({ cover: "", title: "", description: "" })}
         >
           Clear
-        </ButtonDanger>
-      </ButtonGroup>
+        </button>
+      </div>
     </form>
   );
 };

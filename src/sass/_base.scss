@@ -1,0 +1,49 @@
+@use "vars";
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito&family=Roboto:wght@500;700&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Nunito", "Arial", sans-serif;
+  background: vars.$yellow-200;
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Roboto", "Arial", sans-serif;
+}
+
+h1 {
+  font-size: vars.$fs-300;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+h2 {
+  font-size: vars.$fs-300;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: vars.$fs-200;
+  font-weight: 500;
+}
+
+a {
+  display: block;
+  text-decoration: none;
+  color: vars.$black-100;
+}
+
+button {
+  background: transparent;
+  border: none;
+}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import PublicationList from "../components/PublicationList";
-import SearchForm from "../components/SearchForm";
-import Message from "../components/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPublications } from "../store/publicationsReducer";
 import { createSelector } from "reselect";
 import { fetchPublicationList } from "../services/publicationList";
+import SearchForm from "../components/SearchForm";
+import Message from "../components/Message";
 
 const Home = () => {
   const [titleToSearch, setTitleToSearch] = useState();
@@ -38,9 +38,9 @@ const Home = () => {
     <>
       {publications === null && !error && (
         <Message
-          iconClassList={"fa-solid fa-spinner fa-spin"}
-          title={"We are loading publications..."}
-          description={"Dear Reader, be patient: it may take a while"}
+          iconClassList={"fa-solid fa-triangle-exclamation"}
+          title={"There are nothing published yet"}
+          description={'Go to "Write" page and become the first author.'}
         />
       )}
       {error && <Message {...error} />}

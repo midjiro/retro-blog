@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import WriteForm from "../components/WriteForm";
-import StyledWrite from "../components/styled/StyledWrite.styled";
-import { addPublication, getAuthorData } from "../services/publication";
+import { addPublication } from "../services/publication";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthContext";
+import WriteForm from "../components/WriteForm";
 
 const Write = () => {
   const navigate = useNavigate();
@@ -11,10 +10,13 @@ const Write = () => {
 
   const onSubmit = async (data) => {
     try {
-      const author = await getAuthorData(user.uid);
       await addPublication({
         ...data,
-        author,
+        author: {
+          avatar: user.photoURL,
+          username: user.displayName,
+          email: user.email,
+        },
         cover: data.cover.item(0),
         likedBy: [],
       });
@@ -25,11 +27,11 @@ const Write = () => {
   };
 
   return (
-    <StyledWrite>
+    <section className="form-container">
       <h2>Share Your Insights with Our Audience</h2>
       <p>Ready to contribute? We're excited to hear your unique perspective!</p>
       <WriteForm onSubmit={onSubmit} />
-    </StyledWrite>
+    </section>
   );
 };
 

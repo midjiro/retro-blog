@@ -1,9 +1,4 @@
 import { useForm } from "react-hook-form";
-import { Input, TextArea } from "./styled/Input.styled";
-import FormControl from "./styled/FormControl.styled";
-import ButtonGroup from "./styled/ButtonGroup.styled";
-import { ButtonDanger, ButtonSuccess } from "./styled/Button.styled";
-import FormError from "./styled/FormError.styled";
 
 const ContactForm = ({ onSubmit }) => {
   const {
@@ -19,10 +14,13 @@ const ContactForm = ({ onSubmit }) => {
         onSubmit(data);
         reset({ email: "", message: "" });
       })}
+      noValidate
     >
-      <FormControl>
-        <label htmlFor="email">Email Address</label>
-        <Input
+      <div className="form-control">
+        <label htmlFor="email" className="form-control__field">
+          Email Address
+        </label>
+        <input
           {...register("email", {
             required: { value: true, message: "This is required field." },
             pattern: {
@@ -32,12 +30,15 @@ const ContactForm = ({ onSubmit }) => {
           })}
           type="email"
           id="message"
+          className="form-control__input"
         />
-        <FormError>{errors.email?.message}</FormError>
-      </FormControl>
-      <FormControl>
-        <label htmlFor="message">Message</label>
-        <TextArea
+        <span className="form-control__error">{errors.email?.message}</span>
+      </div>
+      <div className="form-control">
+        <label htmlFor="message" className="form-control__field">
+          Message
+        </label>
+        <textarea
           {...register("message", {
             required: { value: true, message: "This is required field" },
             maxLength: {
@@ -48,15 +49,19 @@ const ContactForm = ({ onSubmit }) => {
           rows="5"
           cols="30"
           id="message"
+          className="form-control__input"
         />
-        <FormError>{errors.message?.message}</FormError>
-      </FormControl>
-      <ButtonGroup>
-        <ButtonSuccess>Send</ButtonSuccess>
-        <ButtonDanger onClick={() => reset({ email: "", message: "" })}>
+        <span className="form-control__error">{errors.message?.message}</span>
+      </div>
+      <div className="btn-group">
+        <button className="btn btn--success">Send</button>
+        <button
+          className="btn btn--danger"
+          onClick={() => reset({ email: "", message: "" })}
+        >
           Clear
-        </ButtonDanger>
-      </ButtonGroup>
+        </button>
+      </div>
     </form>
   );
 };

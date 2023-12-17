@@ -1,0 +1,11 @@
+@use "../vars";
+
+.avatar {
+  display: block;
+  inline-size: 2rem;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 2px solid vars.$black-100;
+  border-radius: 50%;
+  grid-area: 1/1/3/2;
+}

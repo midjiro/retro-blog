@@ -3,14 +3,14 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+import { recoverPassword, signIn, signUp } from "./services/user";
 import Home from "./pages/Home";
-import PublicationDetails from "./pages/PublicationsDetails";
+import PublicationDetails from "./pages/PublicationDetails";
 import App from "./App";
 import Write from "./pages/Write";
 import Contact from "./pages/Contact";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import { recoverPassword, signIn, signUp } from "./services/user";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import ProtectedRoute from "./components/hoc/ProtectedRoute";
 

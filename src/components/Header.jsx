@@ -1,11 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import NavigationMenu from "./styled/NavigationMenu.styled";
-import StyledHeader from "./styled/StyledHeader.styled";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../config";
-import { ButtonDanger } from "../components/styled/Button.styled";
 import { toast } from "react-toastify";
 
 const Header = () => {
@@ -22,17 +19,42 @@ const Header = () => {
   }, []);
 
   return (
-    <StyledHeader>
-      <h1>Retro Blog</h1>
-      <button onClick={() => setIsExpanded(!isExpanded)}>
+    <header className="navbar">
+      <h1 className="navbar__brand">Retro Blog</h1>
+      <button
+        className="navbar__trigger"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <i className="fa-xl fa-solid fa-bars"></i>
       </button>
-      <NavigationMenu aria-expanded={isExpanded}>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/write">Write</NavLink>
-        <NavLink to="/contact">Contact Us</NavLink>
+      <nav className="navbar__menu" aria-expanded={isExpanded}>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive ? "navbar__link navbar__link--active" : "navbar__link"
+          }
+        >
+          Home
+        </NavLink>
+        <NavLink
+          to="/write"
+          className={({ isActive }) =>
+            isActive ? "navbar__link navbar__link--active" : "navbar__link"
+          }
+        >
+          Write
+        </NavLink>
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            isActive ? "navbar__link navbar__link--active" : "navbar__link"
+          }
+        >
+          Contact Us
+        </NavLink>
         {isAuthenticated ? (
-          <ButtonDanger
+          <button
+            className="btn btn--danger"
             onClick={() =>
               signOut(auth)
                 .then(() =>
@@ -42,12 +64,19 @@ const Header = () => {
             }
           >
             Sign out
-          </ButtonDanger>
+          </button>
         ) : (
-          <NavLink to="/sign-in">Sign In</NavLink>
+          <NavLink
+            to="/sign-in"
+            className={({ isActive }) =>
+              isActive ? "navbar__link navbar__link--active" : "navbar__link"
+            }
+          >
+            Sign In
+          </NavLink>
         )}
-      </NavigationMenu>
-    </StyledHeader>
+      </nav>
+    </header>
   );
 };
 

@@ -5,7 +5,6 @@ import {
   addDoc,
   updateDoc,
   onSnapshot,
-  getDoc,
 } from "firebase/firestore";
 import { db, storage } from "../config";
 import {
@@ -26,7 +25,6 @@ export function fetchPublication(id) {
             title: "Ooops! We are unable to find this blog.",
             description:
               "It looks like given blog is moved or deleted. Contact us in case you have a questions.",
-            danger: true,
           });
 
         dispatch({
@@ -95,16 +93,4 @@ export async function addPublication(publication) {
       const collectionRef = collection(db, "publications");
       addDoc(collectionRef, { ...publication, cover: coverURL, likes: 0 });
     });
-}
-
-export async function getAuthorData(authorID) {
-  try {
-    const authorRef = doc(db, "users", authorID);
-    let author = await getDoc(authorRef);
-    author = { ...author.data(), id: author.id };
-
-    return author;
-  } catch (e) {
-    console.error(e);
-  }
 }

@@ -2,7 +2,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ConnectionCheck from "./components/hoc/ConnectionCheck";
 import Header from "./components/Header";
-import Container from "./components/styled/Container.styled";
 import { Outlet } from "react-router-dom";
 import { AuthContext } from "./components/AuthContext";
 import { onAuthStateChanged } from "firebase/auth";
@@ -29,9 +28,9 @@ function App() {
         <ToastContainer position="top-center" />
         <AuthContext.Provider value={currentUser}>
           <Header />
-          <Container>
+          <main className="container">
             <Outlet />
-          </Container>
+          </main>
         </AuthContext.Provider>
       </ConnectionCheck>
     </>
