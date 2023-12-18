@@ -88,11 +88,6 @@ const WriteForm = ({ onSubmit }) => {
         <textarea
           {...register("description", {
             required: { value: true, message: "Description is required" },
-            maxLength: {
-              value: 255,
-              message:
-                "Description should be less than or equals to 255 characters length.",
-            },
           })}
           cols="30"
           rows="5"

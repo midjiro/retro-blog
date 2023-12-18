@@ -16,6 +16,7 @@ const Write = () => {
           avatar: user.photoURL,
           username: user.displayName,
           email: user.email,
+          id: user.uid,
         },
         cover: data.cover.item(0),
         likedBy: [],
