@@ -23,9 +23,11 @@ To set up project on your local machine follow steps written down below.
 REACT_APP_API_KEY = "..."
 REACT_APP_MESSAGING_SENDER_ID = "..."
 REACT_APP_APP_ID = "..."
-REACT_APP_EMAIL = "admin email"```
-````
+REACT_APP_EMAIL = "admin email"
+```
+
 
 8. Replace "..." with apiKey, appId and messagingSenderId copied from Project Settings.
 9. Execute `npm install`.
 10. Execute `npm start`.
+````
