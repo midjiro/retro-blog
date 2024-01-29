@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { signOut } from "firebase/auth";
@@ -6,20 +6,35 @@ import { auth } from "../config";
 import { toast } from "react-toastify";
 
 const Header = () => {
+  const headerRef = useRef();
   const [isExpanded, setIsExpanded] = useState(false);
-  const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  window.addEventListener("resize", () =>
-    window.innerWidth >= 720 ? setIsExpanded(true) : setIsExpanded(false)
-  );
+  const handleResize = () =>
+    window.innerWidth >= 720 ? setIsExpanded(true) : setIsExpanded(false);
+
+  const handleOutsideClick = (e) => {
+    const { target } = e;
+
+    if (window.innerWidth < 720 && !headerRef.current.contains(target))
+      setIsExpanded(false);
+  };
 
   useEffect(() => {
     if (window.innerWidth >= 720) setIsExpanded(true);
+
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("click", handleOutsideClick);
+    };
   }, []);
 
   return (
-    <header className="navbar">
+    <header className="navbar" ref={headerRef}>
       <h1 className="navbar__brand">Retro Blog</h1>
       <button
         className="navbar__trigger"

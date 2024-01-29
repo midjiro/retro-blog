@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "retro-blog-3d46c",
   storageBucket: "retro-blog-3d46c.appspot.com",
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_APP_ID,
+  appId: process.env.REACT_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
