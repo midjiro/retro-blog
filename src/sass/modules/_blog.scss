@@ -1,6 +1,6 @@
 @use "../vars";
 
-.publication {
+.blog {
   inline-size: max(288px, 21.562%);
   padding: 1.5rem;
   background-color: vars.$yellow-100;
@@ -13,7 +13,7 @@
   }
 }
 
-.publication__title {
+.blog__title {
   margin-block-end: 0;
   cursor: pointer;
 

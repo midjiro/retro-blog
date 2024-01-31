@@ -1,4 +1,4 @@
-const SearchForm = ({ publications, handleSearch }) => {
+const SearchForm = ({ blogs, handleSearch }) => {
   return (
     <section className="search">
       <h2>
@@ -12,7 +12,7 @@ const SearchForm = ({ publications, handleSearch }) => {
         className="search__form"
         action=""
         onSubmit={(e) => {
-          handleSearch(e, publications);
+          handleSearch(e, blogs);
         }}
       >
         <div className="form-control">

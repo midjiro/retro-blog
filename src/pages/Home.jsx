@@ -1,30 +1,20 @@
 import { useState, useEffect } from "react";
-import PublicationList from "../components/PublicationList";
+import BlogList from "../components/BlogList";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPublications } from "../store/publicationsReducer";
-import { createSelector } from "reselect";
-import { fetchPublicationList } from "../services/publicationList";
+import { filterBlogsByTitle } from "../store/blogsReducer";
+
+import { fetchBlogs } from "../services/blogs";
 import SearchForm from "../components/SearchForm";
 import Message from "../components/Message";
 
 const Home = () => {
   const [titleToSearch, setTitleToSearch] = useState();
-  const [error, publications] = useSelector(
-    createSelector(selectPublications, ([error, publications]) => {
-      if (!titleToSearch) return [error, publications];
-      const filteredPublications = publications.filter((pub) =>
-        pub.title.toLowerCase().includes(titleToSearch)
-      );
-
-      return [error, filteredPublications];
-    })
-  );
+  const [error, blogs] = useSelector(filterBlogsByTitle(titleToSearch));
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const cleanup = dispatch(fetchPublicationList());
-    if (cleanup) return cleanup;
+    dispatch(fetchBlogs());
   }, []);
 
   const handleSearch = (e) => {
@@ -36,7 +26,7 @@ const Home = () => {
 
   return (
     <>
-      {publications === null && !error && (
+      {blogs === null && !error && (
         <Message
           iconClassList={"fa-solid fa-triangle-exclamation"}
           title={"There are nothing published yet"}
@@ -44,12 +34,12 @@ const Home = () => {
         />
       )}
       {error && <Message {...error} />}
-      {publications?.length > 0 && !error && (
+      {blogs?.length > 0 && !error && (
         <>
-          <SearchForm publications={publications} handleSearch={handleSearch} />
+          <SearchForm blogs={blogs} handleSearch={handleSearch} />
           <section>
-            <h2 className="sr-only">Publications:</h2>
-            <PublicationList publications={publications} />
+            <h2 className="sr-only">Blogs:</h2>
+            <BlogList blogs={blogs} />
           </section>
         </>
       )}

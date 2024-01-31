@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-const Publication = ({ author, title, id }) => {
+const Blog = ({ author, title, id }) => {
   return (
-    <article className="publication">
+    <article className="blog">
       <article className="profile-card">
         <img
           src={author.avatar}
@@ -17,10 +17,10 @@ const Publication = ({ author, title, id }) => {
         </div>
       </article>
       <h3>
-        <Link to={`publications/${id}`}>{title}</Link>
+        <Link to={`blogs/${id}`}>{title}</Link>
       </h3>
     </article>
   );
 };
 
-export default Publication;
+export default Blog;

@@ -79,12 +79,12 @@
   margin-block-start: 1rem;
 }
 
-.publication-details {
+.blog-details {
   inline-size: max(288px, 44.375%);
   margin-inline: auto;
 }
 
-.publication-details__cover {
+.blog-details__cover {
   max-inline-size: 100%;
   aspect-ratio: 2/1;
   object-fit: cover;
@@ -93,17 +93,17 @@
   margin-block-end: 1rem;
 }
 
-.publication-details__author {
+.blog-details__author {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.publication-details__author-username {
+.blog-details__author-username {
   font-family: "Roboto", "Arial", sans-serif;
   font-weight: 700;
 }
 
-.publication-details__content {
+.blog-details__content {
   margin-block: 1.5rem;
 }

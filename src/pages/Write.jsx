@@ -1,16 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { addPublication } from "../services/publication";
+import { addBlog } from "../services/blogs";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthContext";
 import WriteForm from "../components/WriteForm";
+import { useDispatch } from "react-redux";
 
 const Write = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
-    try {
-      await addPublication({
+    dispatch(
+      addBlog({
         ...data,
         author: {
           avatar: user.photoURL,
@@ -20,11 +22,9 @@ const Write = () => {
         },
         cover: data.cover.item(0),
         likedBy: [],
-      });
-      navigate("/", { replace: true });
-    } catch (e) {
-      console.error(e);
-    }
+      })
+    );
+    navigate("/", { replace: true });
   };
 
   return (
