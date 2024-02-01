@@ -50,9 +50,7 @@ export function fetchBlogs() {
 export function likeBlog(blogId, userId) {
   return async (dispatch) => {
     const state = store.getState();
-    const blog = state.publicationsReducer.blogs.find(
-      (blog) => blog.id === blogId
-    );
+    const blog = state.blogsReducer.blogs.find((blog) => blog.id === blogId);
 
     try {
       const blogRef = doc(db, "blogs", blogId);

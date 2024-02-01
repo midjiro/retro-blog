@@ -6,7 +6,7 @@ const initialState = {
   blogs: null,
 };
 
-export function publicationsReducer(state = initialState, action) {
+export function blogsReducer(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -65,8 +65,8 @@ export function publicationsReducer(state = initialState, action) {
 }
 
 export const selectBlogs = (state) => [
-  state.publicationsReducer.error,
-  state.publicationsReducer.blogs,
+  state.blogsReducer.error,
+  state.blogsReducer.blogs,
 ];
 
 export const selectSingleBlog = (blogId) =>
