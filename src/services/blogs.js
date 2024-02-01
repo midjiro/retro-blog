@@ -15,7 +15,7 @@ import {
 import { db, storage } from "../config";
 import ACTIONS from "../actions";
 import { store } from "../store";
-import { selectBlogs } from "../store/blogsReducer";
+import { v4 as uuid4 } from "uuid";
 
 export function fetchBlogs() {
   return async (dispatch) => {
@@ -25,23 +25,23 @@ export function fetchBlogs() {
       if (blogsSnapshot.empty) {
         dispatch({
           type: ACTIONS.FETCH_BLOGS,
-          payload: { error: null, blogs: null },
+          payload: { error: null, blogs: [] },
+        });
+      } else {
+        const blogs = blogsSnapshot.docs.map((blog) => ({
+          ...blog.data(),
+          id: blog.id,
+        }));
+
+        dispatch({
+          type: ACTIONS.FETCH_BLOGS,
+          payload: { error: null, blogs },
         });
       }
-
-      const blogs = blogsSnapshot.docs.map((blog) => ({
-        ...blog.data(),
-        id: blog.id,
-      }));
-
-      dispatch({
-        type: ACTIONS.FETCH_BLOGS,
-        payload: { error: null, blogs },
-      });
     } catch (e) {
       dispatch({
         type: ACTIONS.FETCH_BLOGS,
-        payload: { error: e, blogs: null },
+        payload: { error: e, blogs: [] },
       });
     }
   };
@@ -117,7 +117,7 @@ export function deleteBlog(blogId, cover) {
 }
 
 async function uploadCover(cover) {
-  const coverRef = ref(storage, cover.name);
+  const coverRef = ref(storage, uuid4());
   const coverUploadingSnapshot = await uploadBytesResumable(coverRef, cover, {
     contentType: cover.type,
   });
@@ -139,9 +139,6 @@ export function addBlog({ author, cover, title, description, likedBy }) {
         description,
         likedBy,
       };
-
-      // const result = await isAlreadyPublished(title, author.username);
-      // console.log("Is published: ", result);
 
       addDoc(blogsCollection, newBlog);
       dispatch({

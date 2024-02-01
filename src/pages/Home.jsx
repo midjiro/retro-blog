@@ -26,7 +26,7 @@ const Home = () => {
 
   return (
     <>
-      {blogs === null && !error && (
+      {!blogs && !error && (
         <Message
           iconClassList={"fa-solid fa-triangle-exclamation"}
           title={"There are nothing published yet"}
@@ -34,7 +34,7 @@ const Home = () => {
         />
       )}
       {error && <Message {...error} />}
-      {blogs?.length > 0 && !error && (
+      {blogs && !error && (
         <>
           <SearchForm blogs={blogs} handleSearch={handleSearch} />
           <section>
