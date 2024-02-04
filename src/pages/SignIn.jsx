@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { signInWithGoogle } from "../services/user";
-import { AuthContext } from "../components/AuthContext";
-import { useContext } from "react";
+import { logIn, logInWithGoogle } from "../services/user";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../store/userReducer";
 
-const SignIn = ({ onSubmit }) => {
+const SignIn = () => {
   const {
     register,
     handleSubmit,
@@ -13,7 +13,7 @@ const SignIn = ({ onSubmit }) => {
   } = useForm();
 
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <section className="form-container">
@@ -22,7 +22,7 @@ const SignIn = ({ onSubmit }) => {
       <form
         action=""
         onSubmit={handleSubmit((data) =>
-          onSubmit(data)
+          logIn(data)
             .then((user) => toast(`Welcome back, ${user.displayName}!`))
             .then(() => navigate("/", { replace: true }))
             .catch((e) => toast(e.message))
@@ -76,11 +76,13 @@ const SignIn = ({ onSubmit }) => {
           {isAuthenticated ? "You already logged in" : "Log in"}
         </button>
       </form>
-      {!isAuthenticated && (
-        <button className="btn" onClick={signInWithGoogle}>
-          Log in with google
-        </button>
-      )}
+      <button
+        className="btn"
+        disabled={isAuthenticated ? true : false}
+        onClick={logInWithGoogle}
+      >
+        Log in with google
+      </button>
     </section>
   );
 };

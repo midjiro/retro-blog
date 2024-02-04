@@ -1,17 +1,20 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useContext } from "react";
-import { AuthContext } from "../components/AuthContext";
 
-const SignUp = ({ onSubmit }) => {
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../store/userReducer";
+import { createAccount } from "../services/user";
+
+const SignUp = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <section className="form-container">
@@ -20,8 +23,10 @@ const SignUp = ({ onSubmit }) => {
       <form
         action=""
         onSubmit={handleSubmit((data) =>
-          onSubmit(data)
-            .then((user) => toast(`Welcome back, ${user.displayName}!`))
+          createAccount(data)
+            .then((user) =>
+              toast(`Glad to see you in our community, ${user.displayName}!`)
+            )
             .then(() => navigate("/", { replace: true }))
             .catch((e) => toast(e.message))
         )}

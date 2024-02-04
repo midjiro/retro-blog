@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "../config";
-import { toast } from "react-toastify";
+import { useEffect, useState, useRef } from "react";
+import { NavLink } from "react-router-dom";
+
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../store/userReducer";
+import { logOut } from "../services/user";
 
 const Header = () => {
   const headerRef = useRef();
   const [isExpanded, setIsExpanded] = useState(false);
-  const { isAuthenticated } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const handleResize = () =>
     window.innerWidth >= 720 ? setIsExpanded(true) : setIsExpanded(false);
@@ -68,16 +67,7 @@ const Header = () => {
           Contact Us
         </NavLink>
         {isAuthenticated ? (
-          <button
-            className="btn btn--danger"
-            onClick={() =>
-              signOut(auth)
-                .then(() =>
-                  toast("Signed out successfully. See you next time!")
-                )
-                .then(() => navigate("/", { replace: true }))
-            }
-          >
+          <button className="btn btn--danger" onClick={() => logOut()}>
             Sign out
           </button>
         ) : (
