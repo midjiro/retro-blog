@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { recoverPassword } from "../services/user";
 
-const PasswordRecovery = ({ onSubmit }) => {
+const PasswordRecovery = () => {
   const {
     register,
     handleSubmit,
@@ -21,7 +22,7 @@ const PasswordRecovery = ({ onSubmit }) => {
       <form
         action=""
         onSubmit={handleSubmit((data) =>
-          onSubmit(data)
+          recoverPassword(data)
             .then(() =>
               toast("Recovery email sent. Try again with new password!")
             )

@@ -2,19 +2,15 @@ import {
   collection,
   doc,
   getDocs,
-  addDoc,
   updateDoc,
   deleteDoc,
+  setDoc,
 } from "firebase/firestore";
-import {
-  ref,
-  deleteObject,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "../config";
-import ACTIONS from "../actions";
 import { store } from "../store";
+import { uploadCover } from "./utils";
+import { ACTIONS } from "../actions";
 import { v4 as uuid4 } from "uuid";
 
 export function fetchBlogs() {
@@ -25,24 +21,20 @@ export function fetchBlogs() {
       if (blogsSnapshot.empty) {
         dispatch({
           type: ACTIONS.FETCH_BLOGS,
-          payload: { error: null, blogs: [] },
+          payload: { blogs: [] },
         });
       } else {
         const blogs = blogsSnapshot.docs.map((blog) => ({
           ...blog.data(),
-          id: blog.id,
         }));
 
         dispatch({
           type: ACTIONS.FETCH_BLOGS,
-          payload: { error: null, blogs },
+          payload: { blogs },
         });
       }
     } catch (e) {
-      dispatch({
-        type: ACTIONS.FETCH_BLOGS,
-        payload: { error: e, blogs: [] },
-      });
+      console.error(e);
     }
   };
 }
@@ -61,27 +53,19 @@ export function likeBlog(blogId, userId) {
       if (blog.likedBy.includes(userId))
         dispatch({
           type: ACTIONS.UNLIKE_BLOG,
-          payload: { error: null, blogId, userId },
+          payload: { blogId, userId },
         });
       else {
         dispatch({
           type: ACTIONS.LIKE_BLOG,
           payload: {
-            error: null,
             blogId,
             userId,
           },
         });
       }
     } catch (e) {
-      dispatch({
-        type: ACTIONS.LIKE_BLOG,
-        payload: {
-          error: e,
-          blogId,
-          userId,
-        },
-      });
+      console.error(e);
     }
   };
 }
@@ -91,69 +75,42 @@ export function deleteBlog(blogId, cover) {
     const docRef = doc(db, "blogs", blogId);
 
     try {
-      const coverRef = ref(storage, cover);
-      await deleteObject(coverRef);
+      await deleteObject(ref(storage, cover));
       await deleteDoc(docRef);
 
       dispatch({
         type: ACTIONS.DELETE_BLOG,
         payload: {
-          error: null,
           blogId: blogId,
         },
       });
     } catch (e) {
-      dispatch({
-        type: ACTIONS.DELETE_BLOG,
-        payload: {
-          error: e,
-          blogId: blogId,
-        },
-      });
+      console.error(e);
     }
   };
-}
-
-async function uploadCover(cover) {
-  const coverRef = ref(storage, uuid4());
-  const coverUploadingSnapshot = await uploadBytesResumable(coverRef, cover, {
-    contentType: cover.type,
-  });
-
-  const coverUploadingResult = await getDownloadURL(coverUploadingSnapshot.ref);
-
-  return coverUploadingResult;
 }
 
 export function addBlog({ author, cover, title, description, likedBy }) {
   return async (dispatch) => {
     try {
-      const newCoverURL = await uploadCover(cover);
-      const blogsCollection = collection(db, "blogs");
       const newBlog = {
-        cover: newCoverURL,
+        id: uuid4(),
+        cover: await uploadCover(cover),
         author,
         title,
         description,
         likedBy,
       };
 
-      addDoc(blogsCollection, newBlog);
+      await setDoc(doc(db, "blogs", newBlog.id), newBlog);
       dispatch({
         type: ACTIONS.ADD_BLOG,
         payload: {
-          error: null,
           blog: newBlog,
         },
       });
     } catch (e) {
-      dispatch({
-        type: ACTIONS.ADD_BLOG,
-        payload: {
-          error: e,
-          blog: null,
-        },
-      });
+      console.log(e);
     }
   };
 }

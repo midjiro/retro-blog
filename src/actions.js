@@ -1,4 +1,4 @@
-export default {
+export const ACTIONS = {
   FETCH_BLOGS: "blogs/fetch",
   ADD_BLOG: "blogs/add",
   LIKE_BLOG: "blogs/like",

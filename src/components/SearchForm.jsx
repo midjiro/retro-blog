@@ -2,7 +2,7 @@ const SearchForm = ({ blogs, handleSearch }) => {
   return (
     <section className="search">
       <h2>
-        Unlock Valuable Insights: Find What You're Looking For in Our Blog{" "}
+        Unlock Valuable Insights: Find What You're Looking For in Our Blog
       </h2>
       <p>
         Search for answers, solutions, and inspiration within our comprehensive
@@ -12,6 +12,7 @@ const SearchForm = ({ blogs, handleSearch }) => {
         className="search__form"
         action=""
         onSubmit={(e) => {
+          e.preventDefault();
           handleSearch(e, blogs);
         }}
       >

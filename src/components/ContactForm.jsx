@@ -8,11 +8,13 @@ const ContactForm = ({ onSubmit }) => {
     reset,
   } = useForm();
 
+  const INITIAL_STATE = { email: "", message: "" };
+
   return (
     <form
       onSubmit={handleSubmit((data) => {
         onSubmit(data);
-        reset({ email: "", message: "" });
+        reset(INITIAL_STATE);
       })}
       noValidate
     >
@@ -57,7 +59,7 @@ const ContactForm = ({ onSubmit }) => {
         <button className="btn btn--success">Send</button>
         <button
           className="btn btn--danger"
-          onClick={() => reset({ email: "", message: "" })}
+          onClick={() => reset(INITIAL_STATE)}
         >
           Clear
         </button>

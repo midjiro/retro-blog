@@ -1,29 +1,40 @@
 import { useNavigate } from "react-router-dom";
 import { addBlog } from "../services/blogs";
-import { useContext } from "react";
-import { AuthContext } from "../components/AuthContext";
 import WriteForm from "../components/WriteForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentUser } from "../store/userReducer";
+import { isAlreadyPublished } from "../services/utils";
+import { toast } from "react-toastify";
 
 const Write = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
 
   const onSubmit = async (data) => {
+    const author = {
+      avatar: user.photoURL,
+      username: user.displayName,
+      email: user.email,
+      id: user.uid,
+    };
+
+    const isDuplicate = await isAlreadyPublished(data.title, author);
+
+    if (isDuplicate) {
+      toast("Blog with such title is already published.");
+      return;
+    }
+
     dispatch(
       addBlog({
         ...data,
-        author: {
-          avatar: user.photoURL,
-          username: user.displayName,
-          email: user.email,
-          id: user.uid,
-        },
+        author,
         cover: data.cover.item(0),
         likedBy: [],
       })
     );
+
     navigate("/", { replace: true });
   };
 

@@ -1,12 +1,11 @@
-import ACTIONS from "../actions";
+import { ACTIONS } from "../actions";
 import { createSelector } from "reselect";
 
-const initialState = {
-  error: null,
+const INITIAL_STATE = {
   blogs: null,
 };
 
-export function blogsReducer(state = initialState, action) {
+export function blogsReducer(state = INITIAL_STATE, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -16,14 +15,12 @@ export function blogsReducer(state = initialState, action) {
     case ACTIONS.FETCH_BLOGS:
       return {
         ...state,
-        error: payload.error,
         blogs: payload.blogs,
       };
 
     case ACTIONS.LIKE_BLOG:
       return {
         ...state,
-        error: payload.error,
         blogs: state.blogs.map((blog) =>
           blog.id === payload.blogId
             ? {
@@ -37,7 +34,6 @@ export function blogsReducer(state = initialState, action) {
     case ACTIONS.UNLIKE_BLOG:
       return {
         ...state,
-        error: payload.error,
         blogs: state.blogs.map((blog) =>
           blog.id === payload.blogId
             ? {
@@ -58,30 +54,25 @@ export function blogsReducer(state = initialState, action) {
     case ACTIONS.DELETE_BLOG:
       return {
         ...state,
-        error: payload.error,
         blogs: state.blogs.filter((blog) => blog.id !== payload.blogId),
       };
   }
 }
 
-export const selectBlogs = (state) => [
-  state.blogsReducer.error,
-  state.blogsReducer.blogs,
-];
+export const selectBlogs = (state) => state.blogsReducer.blogs;
 
 export const selectSingleBlog = (blogId) =>
-  createSelector(selectBlogs, ([error, blogs]) => [
-    error,
-    blogs.find((blog) => blog.id === blogId),
-  ]);
+  createSelector(selectBlogs, (blogs) =>
+    blogs?.find((blog) => blog.id === blogId)
+  );
 
 export const filterBlogsByTitle = (title) =>
-  createSelector(selectBlogs, ([error, blogs]) => {
-    if (!title) return [error, blogs];
+  createSelector(selectBlogs, (blogs) => {
+    if (!title) return blogs;
 
     const filteredBlogs = blogs.filter((blog) =>
       blog.title.toLowerCase().includes(title)
     );
 
-    return [error, filteredBlogs];
+    return filteredBlogs;
   });

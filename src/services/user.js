@@ -6,7 +6,11 @@ import {
   getRedirectResult,
   sendPasswordResetEmail,
   updateProfile,
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
+import { ACTIONS } from "../actions";
+import { store } from "../store";
 import { auth, storage } from "../config";
 import { getDownloadURL, ref } from "firebase/storage";
 
@@ -25,7 +29,7 @@ function provideErrorMessage(e) {
   }
 }
 
-export async function signUp({ username, email, password }) {
+export async function createAccount({ username, email, password }) {
   try {
     const { user } = await createUserWithEmailAndPassword(
       auth,
@@ -35,7 +39,7 @@ export async function signUp({ username, email, password }) {
 
     const defaultAvatarRef = ref(
       storage,
-      "gs://retro-blog-3d46c.appspot.com/Default Avatar.png"
+      "gs://retro-blog-3d46c.appspot.com/DefaultAvatar.png"
     );
     const defaultAvatarURL = await getDownloadURL(defaultAvatarRef);
 
@@ -50,26 +54,35 @@ export async function signUp({ username, email, password }) {
   }
 }
 
-export async function signIn({ email, password }) {
+export async function logIn({ email, password }) {
   try {
     const { user } = await signInWithEmailAndPassword(auth, email, password);
+
     return user;
   } catch (e) {
     throw new Error(provideErrorMessage(e));
   }
 }
 
-export async function signInWithGoogle() {
+export async function logInWithGoogle() {
   try {
     const provider = new GoogleAuthProvider();
     await signInWithRedirect(auth, provider);
 
     const result = await getRedirectResult(auth);
     const { user } = GoogleAuthProvider.credentialFromResult(result);
-    debugger;
+
     return user;
   } catch (e) {
     throw new Error(provideErrorMessage(e));
+  }
+}
+
+export function logOut() {
+  try {
+    signOut(auth);
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -79,4 +92,13 @@ export async function recoverPassword({ email }) {
   } catch (e) {
     throw new Error(provideErrorMessage(e));
   }
+}
+
+export function handleAuthStateChange() {
+  onAuthStateChanged(auth, (user) => {
+    if (!user) store.dispatch({ type: ACTIONS.SIGN_OUT });
+    else {
+      store.dispatch({ type: ACTIONS.SIGN_IN, payload: { user } });
+    }
+  });
 }
